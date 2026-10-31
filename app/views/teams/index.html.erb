@@ -1,0 +1,98 @@
+<h1 class="h4 mb-4">Browse teams</h1>
+
+<form method="get" action="<%= teams_path %>" class="mb-3 select-narrow">
+  <label for="league" class="form-label">League</label>
+  <select id="league" name="league" class="form-select" onchange="this.form.submit()">
+    <% Subscription::LEAGUES.each do |key, label| %>
+      <option value="<%= key %>" <%= 'selected' if @league == key %>><%= label %></option>
+    <% end %>
+  </select>
+  <noscript><button type="submit" class="btn btn-secondary mt-2">Load</button></noscript>
+</form>
+
+<% if @error %><div class="alert alert-danger py-2"><%= @error %></div><% end %>
+
+<div class="card mb-4">
+  <div class="card-header">By competition<% if @competition_name %> — <%= @competition_name %><% end %></div>
+  <div class="card-body">
+    <% if @league == 'football' %>
+    <form method="get" action="<%= teams_path %>" class="mb-3 select-narrow">
+      <select name="competition" class="form-select" onchange="this.form.submit()">
+        <% @competitions.each do |slug| %>
+          <option value="<%= slug %>" <%= "selected" if slug == @competition %>>
+            <%= slug.tr("-", " ").titleize %>
+          </option>
+        <% end %>
+      </select>
+      <noscript><button type="submit" class="btn btn-secondary mt-2">Load</button></noscript>
+    </form>
+    <% end %>
+
+    <% if @teams.any? %>
+      <table class="table table-hover align-middle mb-0">
+        <thead>
+          <tr><th>#</th><th></th><th>Team</th><th>Slug</th><th></th></tr>
+        </thead>
+        <tbody>
+          <% @teams.each do |team| %>
+            <tr>
+              <td class="text-secondary"><%= team.position %></td>
+              <td class="logo-cell"><%= image_tag team.logo, size: "24x24" if team.logo %></td>
+              <td><%= team.name %></td>
+              <td class="text-secondary"><code><%= team.slug %></code></td>
+              <td class="text-end">
+                <% if @subscribed.include?(team.slug) %>
+                  <%= button_to "Unsubscribe", team_path(team.slug), method: :delete,
+                                class: "btn btn-sm btn-outline-danger btn-sub d-inline" %>
+                <% else %>
+                  <%= button_to "Subscribe", teams_path,
+                                params: { slug: team.slug, name: team.name, league: @league,
+                                          logo: team.logo, sport: @sport,
+                                          competition: @competition },
+                                class: "btn btn-sm btn-outline-success btn-sub" %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% elsif @competition %>
+      <p class="text-secondary mb-0">No teams found for this competition (slug may be wrong).</p>
+    <% end %>
+  </div>
+</div>
+
+<% if @league == 'football' %>
+<div class="card">
+  <div class="card-header">Verify a slug</div>
+  <div class="card-body">
+    <form method="get" action="<%= teams_path %>" class="d-flex gap-2 select-narrow">
+      <input type="hidden" name="sport" value="<%= @sport %>">
+      <input type="hidden" name="competition" value="<%= @competition %>">
+      <input type="text" name="check" value="<%= @check_query %>" class="form-control" placeholder="e.g. fc-barcelona">
+      <button type="submit" class="btn btn-outline-secondary">Check</button>
+    </form>
+    <% unless @checked.nil? %>
+      <div class="mt-3">
+        <% if @checked %>
+          <%= image_tag @checked.logo, size: "24x24" if @checked.logo %>
+          Found: <strong><%= @checked.name %></strong> (<code><%= @checked.slug %></code>)
+          <% unless @subscribed.include?(@checked.slug) %>
+            <%= button_to "Subscribe", teams_path,
+                          params: { slug: @checked.slug, name: @checked.name,
+                                    logo: @checked.logo, sport: @sport,
+                                    competition: @competition },
+                          class: "btn btn-sm btn-outline-success ms-2 d-inline" %>
+          <% end %>
+        <% else %>
+          <span class="text-danger">No team found for slug <code><%= @check_query %></code>.</span>
+        <% end %>
+      </div>
+    <% end %>
+    <p class="text-secondary small mt-3 mb-0">
+      Tip: a team slug is the last part of the team page URL on sportscore.com,
+      e.g. <code>/football/team/fc-barcelona/</code> &rarr; <code>fc-barcelona</code>.
+    </p>
+  </div>
+</div>
+<% end %>

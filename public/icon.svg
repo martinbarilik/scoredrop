@@ -1,0 +1,23 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <rect width="512" height="512" rx="112" fill="#12232e"/>
+  <g transform="translate(256,256)">
+    <circle r="176" fill="#f8f9fa"/>
+    <circle r="176" fill="none" stroke="#12232e" stroke-width="14"/>
+    <g fill="#12232e">
+      <polygon points="0,-64 60.8,-19.8 37.6,51.8 -37.6,51.8 -60.8,-19.8"/>
+      <polygon points="0,-176 16.5,-140 0,-124 -16.5,-140"/>
+      <polygon points="167.2,-54.2 124.6,-39.9 110.2,-68 144.8,-86.6"/>
+      <polygon points="103.4,142.4 64.4,126.7 65.9,94.2 107.5,97.9"/>
+      <polygon points="-103.4,142.4 -107.5,97.9 -65.9,94.2 -64.4,126.7"/>
+      <polygon points="-167.2,-54.2 -144.8,-86.6 -110.2,-68 -124.6,-39.9"/>
+    </g>
+    <g stroke="#12232e" stroke-width="14" fill="none">
+      <line x1="0" y1="-64" x2="0" y2="-162"/>
+      <line x1="60.8" y1="-19.8" x2="154" y2="-49.8"/>
+      <line x1="37.6" y1="51.8" x2="95.3" y2="131.1"/>
+      <line x1="-37.6" y1="51.8" x2="-95.3" y2="131.1"/>
+      <line x1="-60.8" y1="-19.8" x2="-154" y2="-49.8"/>
+    </g>
+    <circle r="176" fill="none" stroke="#198754" stroke-width="22"/>
+  </g>
+</svg>

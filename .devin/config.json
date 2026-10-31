@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(./**)",
+      "Exec(git status)",
+      "Exec(git diff)",
+      "Exec(git log)"
+    ],
+    "deny": [
+      "Exec(sudo)",
+      "Exec(rm -rf)",
+      "Exec(git push --force)",
+      "Exec(git reset --hard)",
+      "Exec(pg_dropcluster)",
+      "Exec(dropdb)",
+      "Exec(rake db:drop)",
+      "Exec(rails db:drop)",
+      "Exec(rake db:reset)",
+      "Exec(rails db:reset)"
+    ],
+    "ask": [
+      "Write(./**)",
+      "Exec(bundle install)",
+      "Exec(npm install)",
+      "Exec(yarn install)",
+      "Exec(rake db:migrate)",
+      "Exec(rails db:migrate)",
+      "Exec(git commit)",
+      "Exec(git push)"
+    ]
+  }
+}

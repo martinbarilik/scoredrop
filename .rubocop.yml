@@ -1,0 +1,10 @@
+Style/StringLiterals:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: true
+  EnforcedStyle: always
+  SafeAutoCorrect: true
+
+Style/Documentation:
+  Enabled: false

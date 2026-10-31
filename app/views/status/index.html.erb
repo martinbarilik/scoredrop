@@ -1,0 +1,78 @@
+<meta http-equiv="refresh" content="60">
+
+<h1 class="h4 mb-4">Subscriptions</h1>
+
+<div class="card mb-4">
+  <div class="card-body py-2 d-flex align-items-center gap-3">
+    <span class="text-secondary">Last poll:</span>
+    <span><%= @last_polled_at ? "#{time_ago_in_words(@last_polled_at)} ago" : "never" %></span>
+    <% if @last_error %>
+      <span class="badge text-bg-danger"><%= @last_error %></span>
+    <% end %>
+  </div>
+</div>
+
+<div class="card mb-4">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <span>Teams (<%= @subscriptions.size %>)</span>
+    <%= link_to "browse teams", teams_path, class: "btn btn-sm btn-outline-success" %>
+  </div>
+  <div class="card-body p-0">
+    <% if @subscriptions.empty? %>
+      <p class="text-secondary p-3 mb-0">
+        No teams subscribed. <%= link_to "Browse teams", teams_path %> to subscribe.
+      </p>
+    <% else %>
+      <table class="table table-hover align-middle mb-0">
+        <tbody>
+          <% @subscriptions.each do |sub| %>
+            <tr>
+              <td class="logo-cell"><%= image_tag sub.logo, size: "24x24" if sub.logo %></td>
+              <td><%= sub.name || sub.team_slug %></td>
+              <td class="text-secondary"><code><%= sub.team_slug %></code></td>
+              <td class="text-end">
+                <%= button_to "Unsubscribe", team_path(sub.team_slug), method: :delete,
+                              class: "btn btn-sm btn-outline-danger" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">Tracked matches</div>
+  <div class="card-body p-0">
+    <% if @matches.empty? %>
+      <p class="text-secondary p-3 mb-0">No matches tracked yet.</p>
+    <% else %>
+      <table class="table table-hover align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Kickoff (UTC)</th><th>Match</th><th>Competition</th><th class="text-center">Score</th><th class="text-center">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @matches.each do |m| %>
+            <tr>
+              <td class="text-nowrap"><%= m.kickoff_at&.utc&.strftime("%Y-%m-%d %H:%M") %></td>
+              <td><%= m.home %> vs <%= m.away %></td>
+              <td class="text-secondary"><%= m.competition %></td>
+              <td class="text-center"><%= m.home_score %>-<%= m.away_score %></td>
+              <td class="text-center">
+                <span class="badge text-bg-<%= { "live" => "success", "upcoming" => "secondary", "finished" => "dark" }[m.status] || "secondary" %>">
+                  <%= m.status %>
+                </span>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <div class="d-flex justify-content-center py-2">
+        <%= paginate @matches %>
+      </div>
+    <% end %>
+  </div>
+</div>

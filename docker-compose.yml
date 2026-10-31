@@ -1,0 +1,12 @@
+services:
+  scoredrop:
+    build: .
+    ports:
+      - "3000:80"
+    volumes:
+      - scoredrop-data:/data
+    # SECRET_KEY_BASE is auto-generated and persisted in the volume if unset.
+    restart: unless-stopped
+
+volumes:
+  scoredrop-data:

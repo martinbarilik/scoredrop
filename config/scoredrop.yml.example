@@ -1,0 +1,46 @@
+# Scoredrop configuration.
+# Copy to config/scoredrop.yml (or set SCOREDROP_CONFIG to a path on your data volume).
+
+sport: football
+
+# Team slugs as they appear in sportscore.com URLs, e.g.
+# https://sportscore.com/football/team/barcelona/ -> "barcelona"
+teams:
+  - fc-barcelona
+
+# Competitions offered in the "Browse teams" UI (competition slugs from
+# sportscore.com competition URLs). Add or remove freely.
+competitions:
+  - spanish-la-liga
+  - english-premier-league
+  - bundesliga
+  - italian-serie-a
+  - french-ligue-1
+  - uefa-champions-league
+  - uefa-europa-league
+  - netherlands-eredivisie
+  - turkish-super-league
+  - scottish-premiership
+  - brazilian-serie-a
+
+# Poll intervals (seconds). The "live" interval is used while a tracked match
+# is live or due to kick off soon; the idle interval is used otherwise.
+poll_interval_seconds: 120
+idle_poll_interval_seconds: 900
+
+# How long before kickoff to switch to the live poll interval.
+live_window_seconds: 1800
+
+# Minutes before kickoff to send a "starting soon" reminder (0 = disabled).
+remind_minutes_before: 0
+
+notify:
+  start: true     # match went live (primary notification)
+  goals: true     # goal incidents / score changes
+  fulltime: true  # match finished
+
+ntfy:
+  url: https://ntfy.sh        # your ntfy server
+  topic: scoredrop             # topic to publish to
+  # token: tk_xxxxxxxx        # optional, for protected topics
+  # priority: 4               # optional default priority, 1-5

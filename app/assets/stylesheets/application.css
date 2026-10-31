@@ -1,0 +1,41 @@
+/*
+ * Minimal overrides on top of Bootstrap 5.3 (loaded via CDN in the layout).
+ * Theme is driven by data-bs-theme; dark is the default.
+ */
+
+[data-bs-theme="dark"] body {
+    background-color: #0f1410;
+}
+
+[data-bs-theme="light"] body {
+    background-color: #f4f7f4;
+}
+
+.navbar-brand {
+    letter-spacing: 0.5px;
+}
+
+.card {
+    border-color: var(--bs-border-color);
+}
+
+/* Same width for Subscribe/Unsubscribe buttons so table columns don't shift. */
+.btn-sub {
+    min-width: 7.5rem;
+}
+
+.container-narrow {
+    max-width: 1100px;
+}
+
+.form-narrow {
+    max-width: 520px;
+}
+
+.select-narrow {
+    max-width: 420px;
+}
+
+.logo-cell {
+    width: 32px;
+}

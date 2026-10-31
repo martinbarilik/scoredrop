@@ -1,0 +1,38 @@
+#!/bin/bash -e
+
+# If running the rails server: seed a default config onto the data volume,
+# init + start embedded postgres, and prepare the database.
+if [ "${@: -2:1}" == "./bin/rails" ] || [ "${@: -1:1}" == "server" ]; then
+  # Debian version may ship any postgresql major — locate it.
+  export PATH="$(ls -d /usr/lib/postgresql/*/bin 2>/dev/null | head -1):$PATH"
+
+  if [ ! -f "$SCOREDROP_CONFIG" ] && [ -n "$SCOREDROP_CONFIG" ]; then
+    cp /rails/config/scoredrop.yml.example "$SCOREDROP_CONFIG"
+    echo "Seeded default config at $SCOREDROP_CONFIG"
+  fi
+
+  # Persist a secret key base on the volume if none is provided.
+  if [ -z "$SECRET_KEY_BASE" ]; then
+    if [ ! -f /data/secret_key_base ]; then
+      ./bin/rails secret > /data/secret_key_base
+    fi
+    export SECRET_KEY_BASE="$(cat /data/secret_key_base)"
+  fi
+
+  if [ -z "$(ls -A "$PGDATA" 2>/dev/null)" ]; then
+    initdb -D "$PGDATA" -U scoredrop --auth=trust >/dev/null
+  fi
+
+  pg_ctl -D "$PGDATA" -o "-c listen_addresses=127.0.0.1 -k /tmp -p 5432" -w -l /tmp/postgres.log start
+
+  # Stop embedded postgres cleanly when the container stops.
+  trap 'pg_ctl -D "$PGDATA" -m fast stop' TERM INT
+
+  ./bin/rails db:prepare
+
+  "${@}" &
+  wait $!
+  exit $?
+fi
+
+exec "${@}"
